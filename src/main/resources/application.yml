@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: local
+
+  application:
+    name: ticketaca
+
+  # Graceful Shutdown (30초 타임아웃)
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+server:
+  shutdown: graceful
+
+# Actuator - Health Check (liveness/readiness)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus, info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when-authorized
+      group:
+        liveness:
+          include: livenessState
+        readiness:
+          include: readinessState, db, redis
+  health:
+    redis:
+      enabled: true
+
+# SpringDoc Swagger
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+  api-docs:
+    path: /v3/api-docs
