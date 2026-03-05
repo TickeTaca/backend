@@ -80,7 +80,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
-      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      CLUSTER_ID: s2AwtNSyTYSfo_Rd5xx0aQ
     volumes:
       - kafka-data:/tmp/kraft-combined-logs
     restart: unless-stopped
