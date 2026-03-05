@@ -57,6 +57,54 @@
 - **모니터링**: Prometheus, Grafana, Zipkin
 - **빌드**: Gradle (Kotlin DSL)
 - **컨테이너**: Docker, Docker Compose
+- **CI/CD**: GitHub Actions
+- **배포**: Oracle Cloud Infrastructure (OCI) Free Tier ARM Instance
+
+---
+
+## 브랜치 전략 & CI/CD
+
+### Git-flow 브랜치 모델
+
+```
+main ─────────────────────────────────── 운영 배포 (OCI 자동 배포)
+  └── develop ────────────────────────── 개발 통합 (CI: 빌드/테스트만)
+        ├── feature/{도메인}-{기능명} ── 기능 개발
+        ├── hotfix/{이슈번호}-{설명} ─── 긴급 수정 (main에서 분기)
+        └── release/{버전} ───────────── 배포 준비
+```
+
+**브랜치 네이밍 규칙**:
+- `feature/queue-waiting-system`, `feature/seat-hold-api`
+- `hotfix/42-fix-seat-race-condition`
+- `release/1.0.0`
+
+**머지 규칙**:
+- `feature → develop`: Squash Merge (커밋 히스토리 정리)
+- `develop → main`: Merge Commit (릴리스 이력 보존)
+- `hotfix → main + develop`: Merge Commit
+
+### CI/CD 파이프라인
+
+| 트리거 | 워크플로우 | 수행 작업 |
+|--------|-----------|-----------|
+| `develop` push / PR | `ci.yml` | Build → Test → (PR이면 테스트 결과 코멘트) |
+| `main` push | `deploy.yml` | Build → Test → Docker Build (ARM64) → Push to GHCR → OCI SSH Deploy |
+
+**배포 대상**: OCI Free Tier ARM 인스턴스 (4 OCPU, 24GB RAM)
+- 앱 + 인프라(MySQL, Redis, Kafka, 모니터링)를 `docker-compose.prod.yml`로 단일 서버에서 운영
+- Docker 이미지 레지스트리: GitHub Container Registry (ghcr.io)
+
+### 배포 시 필요한 GitHub Secrets
+
+| Secret 이름 | 설명 |
+|-------------|------|
+| `OCI_HOST` | OCI 인스턴스 퍼블릭 IP |
+| `OCI_USERNAME` | SSH 접속 사용자 (보통 `ubuntu`) |
+| `OCI_SSH_KEY` | SSH 프라이빗 키 |
+| `PROD_DB_PASSWORD` | 운영 MySQL 비밀번호 |
+| `PROD_REDIS_PASSWORD` | 운영 Redis 비밀번호 |
+| `JWT_SECRET` | JWT 서명 키 |
 
 ---
 
@@ -399,6 +447,9 @@ void holdSeat_concurrentRequests_onlyOneSucceeds() {
 | `docs/troubleshooting/` | 트러블슈팅 기록 |
 | `docs/load-test/` | 부하 테스트 결과 |
 | `docker-compose.yml` | 로컬 개발 환경 구성 |
+| `docker-compose.prod.yml` | 운영 서버 환경 구성 (앱 포함) |
+| `Dockerfile` | 애플리케이션 컨테이너 이미지 |
+| `.github/workflows/` | CI/CD 파이프라인 정의 |
 | `src/main/resources/scripts/` | Redis Lua Script |
 | `src/test/resources/` | 테스트 데이터, 설정 |
 
