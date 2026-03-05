@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/changeme/ticketaca:latest  # GitHub 레포 경로로 변경 필요
+    image: ghcr.io/ticketaca/backend:latest
     container_name: ticketaca-app
     ports:
       - "8080:8080"
