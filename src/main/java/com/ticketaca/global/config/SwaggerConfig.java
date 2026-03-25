@@ -17,7 +17,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("TickeTaca API")
-                        .description("실시간 좌석 예매 플랫폼 API")
+                        .description("API documentation for the ticket reservation service")
                         .version("v1"))
                 .addSecurityItem(new SecurityRequirement().addList(jwtScheme))
                 .components(new Components()

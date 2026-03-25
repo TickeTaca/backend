@@ -1,18 +1,14 @@
 spring:
   profiles:
     active: local
-
   application:
     name: ticketaca
-
-  # Graceful Shutdown (30초 타임아웃)
   lifecycle:
     timeout-per-shutdown-phase: 30s
 
 server:
   shutdown: graceful
 
-# Actuator - Health Check (liveness/readiness)
 management:
   endpoints:
     web:
@@ -32,7 +28,6 @@ management:
     redis:
       enabled: true
 
-# SpringDoc Swagger
 springdoc:
   swagger-ui:
     path: /swagger-ui/index.html

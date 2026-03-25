@@ -1,18 +1,15 @@
 package com.ticketaca;
 
-import com.ticketaca.global.config.TestcontainersConfig;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
+@SpringBootTest(properties = {
+        "spring.autoconfigure.exclude=org.redisson.spring.starter.RedissonAutoConfigurationV2"
+})
 @ActiveProfiles("test")
-@SpringBootTest
-@Import(TestcontainersConfig.class)
-class TickeTacaApplicationTests {
+class TicketacaApplicationTests {
 
-    @DisplayName("Spring Context가 정상적으로 로드된다")
     @Test
     void contextLoads() {
     }
