@@ -8,8 +8,9 @@ group = "com.ticketaca"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
@@ -23,70 +24,72 @@ repositories {
 }
 
 val queryDslVersion = "5.1.0"
+val springModulithVersion = "1.3.3"
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.modulith:spring-modulith-bom:$springModulithVersion")
+    }
+}
 
 dependencies {
-    // Spring Boot Starters
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
 
-    // Kafka
     implementation("org.springframework.kafka:spring-kafka")
-
-    // API Documentation
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
+    implementation("org.springframework.modulith:spring-modulith-starter-core")
+    implementation("org.springframework.retry:spring-retry")
 
-    // QueryDSL
-    implementation("com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta")
-    annotationProcessor("com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
+    implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta")
+    annotationProcessor("com.querydsl:querydsl-apt:$queryDslVersion:jakarta")
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
 
-    // Redis - Redisson (distributed lock)
     implementation("org.redisson:redisson-spring-boot-starter:3.41.0")
 
-    // JWT
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
-    // Database
     runtimeOnly("com.mysql:mysql-connector-j")
 
-    // Monitoring
     implementation("io.micrometer:micrometer-registry-prometheus")
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
     implementation("io.zipkin.reporter2:zipkin-reporter-brave")
 
-    // Lombok
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
-    // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.springframework.modulith:spring-modulith-starter-test")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
     testImplementation("org.testcontainers:kafka")
     testImplementation("com.redis:testcontainers-redis:2.2.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("com.h2database:h2")
 
-    // Test Lombok
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    jvmArgs("-Dfile.encoding=UTF-8")
 }
 
-// QueryDSL generated sources
 val querydslDir = layout.buildDirectory.dir("generated/querydsl")
 
 sourceSets {
@@ -98,6 +101,7 @@ sourceSets {
 }
 
 tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
     options.generatedSourceOutputDirectory.set(querydslDir)
 }
 

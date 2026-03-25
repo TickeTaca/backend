@@ -1,1 +1,1 @@
-rootProject.name = "TickeTaca"
+rootProject.name = "ticketaca-backend"

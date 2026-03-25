@@ -18,27 +18,18 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/events").permitAll()
-                        .requestMatchers("/api/v1/events/{eventId}").permitAll()
-                        // Actuator
+                        .requestMatchers("/api/v1/events", "/api/v1/events/*").permitAll()
                         .requestMatchers("/actuator/health/**").permitAll()
-                        // Swagger
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        // WebSocket
                         .requestMatchers("/ws/**").permitAll()
-                        // Admin endpoints
                         .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        // All other endpoints require authentication
                         .anyRequest().authenticated()
                 );
 
-        // TODO: JWT 인증 필터 추가 (Phase 1 완료 후)
-
+        // JWT authentication filter will be attached in the auth slice.
         return http.build();
     }
 

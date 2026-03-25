@@ -1,5 +1,6 @@
 # Gradle
 .gradle/
+.gradle-home/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -29,7 +30,7 @@ hs_err_pid*
 .env
 *.env.local
 
-# ADR (Git 미추적 — REQUIREMENTS.md 명시)
+# ADR (Git 미추적, REQUIREMENTS.md 명시)
 docs/adr/
 
 # Test results
