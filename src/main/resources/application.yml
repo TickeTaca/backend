@@ -9,6 +9,15 @@ spring:
   lifecycle:
     timeout-per-shutdown-phase: 30s
 
+auth:
+  jwt:
+    issuer: ticketaca
+    secret: ${JWT_SECRET:ticketaca-dev-secret-key-must-be-32bytes}
+    access-token-expires-in-seconds: 900
+    refresh-token-expires-in-seconds: 1209600
+  email-verification:
+    expires-in-minutes: 10
+
 server:
   shutdown: graceful
 
