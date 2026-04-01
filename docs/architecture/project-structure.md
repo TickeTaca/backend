@@ -166,6 +166,7 @@ com.ticketaca
   - api docs
 - `docs/architecture`
   - 구조와 아키텍처 의사결정
+  - database schema(Soft FK 규약)
 - 이후 필요 시 `docs/adr`, `docs/troubleshooting`, `docs/load-test`를 추가합니다.
 
 ---

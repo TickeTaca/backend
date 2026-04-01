@@ -1,13 +1,12 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:ticketaca;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:tc:mysql:8.0:///ticketaca?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: test
+    password: test
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
@@ -16,6 +15,8 @@ spring:
     bootstrap-servers: localhost:9092
     consumer:
       group-id: ticketaca-test-group
+  flyway:
+    enabled: true
 
 management:
   endpoint:
