@@ -111,6 +111,18 @@ Request:
 }
 ```
 
+### 3-2-1. 이메일 인증 코드 재전송
+
+`POST /auth/email/verification/resend`
+
+Request:
+
+```json
+{
+  "email": "user@example.com"
+}
+```
+
 ### 3-3. 이메일 로그인
 
 `POST /auth/email/login`
@@ -154,6 +166,18 @@ Request:
 ### 3-5. 토큰 재발급
 
 `POST /auth/token/refresh`
+
+Request:
+
+```json
+{
+  "refreshToken": "jwt-refresh-token"
+}
+```
+
+### 3-6. 로그아웃
+
+`POST /auth/logout`
 
 Request:
 
