@@ -38,6 +38,9 @@ spring:
     consumer:
       group-id: ticketaca-group
 
+  flyway:
+    enabled: true
+
 management:
   tracing:
     sampling:
